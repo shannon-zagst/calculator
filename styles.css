@@ -1,6 +1,6 @@
 body{ text-align: center; }
 .calc{  width: 300px; margin: 0 auto;}
-.num, .op, #equals, #decimal, #clear, #minus, #paranthesesOne, #paranthesesTwo{
+.num, .op, #equals, #decimal, #clear, #minus, #paranthesesOne, #paranthesesTwo, #erase{
 border: 1px solid black;
 width: 50px; height: 50px;
 display: inline-block;
@@ -14,7 +14,7 @@ margin-top: 2px;}
 #minus{
     background-color: rgba(200, 10, 30,.9);
 }
-#clear{
+#clear, #erase{
     background-color: rgba(20, 170, 240, .7);
 }
 

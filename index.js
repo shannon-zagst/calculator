@@ -6,6 +6,8 @@ let numArray = [];
 let opArray = [];
 let newNum = "";
 let mode = "immediate";
+let deleteNext = "";
+let minusFlag = false;
 
 let putMode = document.getElementById("mode");
 document.getElementById("immediate").addEventListener("click", function() {
@@ -35,51 +37,67 @@ document.getElementById("decimal").addEventListener("click", function() {
     newNum += this.textContent;
     displayNum += this.textContent;
     display.textContent = displayNum;
+    deleteNext = "num";
   }
 });
 
 document.getElementById("minus").addEventListener("click", function() {
-  if (newNum === "") {
+  let prevC = displayNum[displayNum.length-1];
+  if (/*newNum === ""*/isOp(prevC)) {
     newNum += '-';
     displayNum += '-';
     display.textContent = displayNum;
+    deleteNext = "num";
+    minusFlag = true;
   }
 });
 
 
-function putOp() {
-  if (newNum.length > 0) {
-    if (displayNum[displayNum.length - 1] === '+' ||
-      displayNum[displayNum.length - 1] === '-' ||
-      displayNum[displayNum.length - 1] === '/' ||
-      displayNum[displayNum.length - 1] === '*') {
 
-      opArray.pop();
+
+function putOp() {
+//  if (newNum.length > 0) {
+    if (displayNum[displayNum.length - 1] === '+' ||
+        displayNum[displayNum.length - 1] === '/' ||
+      displayNum[displayNum.length - 1] === '*' ||
+    displayNum[displayNum.length - 1] === '-') {
+
+    //  opArray.pop();
+    if(displayNum[displayNum.length-1] === '-' && minusFlag === true){
+      displayNum = displayNum.slice(0, -2);
+      console.log(displayNum);
+      display.textContent = displayNum;
+    }else{
       displayNum = displayNum.slice(0, -1);
       console.log(displayNum);
       display.textContent = displayNum;
+}
 
-    } else {
+  //  } else {
       // newNum = newNum.toPrecision(2);
       if (!newNum.includes('.')) {
-        numArray.push(parseInt(newNum));
+      //  numArray.push(parseInt(newNum));
       } else {
         // newNum = newNum.toFixed(4);
-        newNum = parseFloat(newNum);
-        newNum = Math.round(newNum * 1e4) / 1e4;
-        numArray.push(newNum);
+      //  newNum = parseFloat(newNum);
+      //  newNum = Math.round(newNum * 1e4) / 1e4;
+      //  numArray.push(newNum);
       }
       newNum = "";
-    }
-    opArray.push(this.textContent);
-    displayNum += this.textContent;
-    display.textContent = displayNum;
+  //  }
+    //opArray.push(this.textContent);
+
   }
+
+  displayNum += this.textContent;
+  display.textContent = displayNum;
+  deleteNext = "op";
+  minusFlag = false;
 }
 
 function putNum() {
 
-  if (newNum.length === 1) {
+/*  if (newNum.length === 1) {
     if (newNum[0] === '0' && this.textContent === '0') { // dont add
     } else {
       newNum += this.textContent;
@@ -88,8 +106,20 @@ function putNum() {
   } else {
     newNum += this.textContent;
     displayNum += this.textContent;
-  }
+  }*/
+  //if 0 and at beg of display or num, dont add. nvm could just be 0,check other nums
+if(/*this.textContent === '0' && isOp(displayNum[displayNum.length-1]) === true*/displayNum[displayNum.length-1] === '0' && isOp(displayNum[displayNum.length-2]) === true){
+  displayNum = displayNum.slice(0,-1);
+  displayNum += this.textContent;
+}
+  //else add
+  else{
+  displayNum += this.textContent;
+}
+
   display.textContent = displayNum;
+  deleteNext = "num";
+  minusFlag = false;
 }
 
 document.getElementById("clear").addEventListener("click", function() {
@@ -97,6 +127,26 @@ document.getElementById("clear").addEventListener("click", function() {
   newNum = "";
   numArray = [];
   opArray = [];
+  display.textContent = displayNum;
+});
+
+document.getElementById("erase").addEventListener("click", function(){
+  // get prev char of display num
+let eraseChar = displayNum[displayNum.length-1];
+  // if op, pop most recent in op opArray
+/*if(deleteNext === "op"){
+//  opArray.pop();
+  displayNum = displayNum.slice(0, displayNum.length-1);
+  display.textContent = displayNum;
+}
+  //if num, pop last digit of num in numArray
+  else if(deleteNext === "num"){
+    let lastNum = numArray[numArray.length-1];
+    lastNum = lastNum.toString();
+    lastNum = lastNum.slice(lastNum.length-1);
+    lastNum = Number(lastNum);
+  }*/
+  displayNum = displayNum.slice(0, displayNum.length-1);
   display.textContent = displayNum;
 });
 
@@ -123,8 +173,41 @@ document.getElementById("paranthesesTwo").addEventListener("click", function() {
   }
 });
 
+
+let digits = ['0','1','2','3','4','5','6','7','8','9','.'];
+function isNum(n){
+  for(let i = 0; i < digits.length; i++){
+    if(n === digits[i]){
+      return true;
+    }
+  }
+  return false;
+}
+
+function isOp(prevC){
+  if(prevC === '+' || prevC === '*' || prevC === '/'){
+    return true;
+  }
+  else if(prevC === '-' && minusFlag === false){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+function pushToNumArray(num){
+  if (!num.includes('.')) {
+    numArray.push(parseInt(num));
+  } else {
+    num = parseFloat(num);
+    num = Math.round(num * 1e4) / 1e4;
+    numArray.push(num);
+  }
+}
+
 document.getElementById("equals").addEventListener("click", function() {
-  if (!newNum.includes('.')) {
+  /*if (!newNum.includes('.')) {
     numArray.push(parseInt(newNum));
   } else {
     newNum = parseFloat(newNum);
@@ -132,6 +215,43 @@ document.getElementById("equals").addEventListener("click", function() {
     numArray.push(newNum);
   }
   newNum = "";
+*/
+// use displayNum to add num and op to correct opArray
+// if num, convert from string to nums
+let typeArr = [];
+for(let i = 0; i < displayNum.length; i++){
+  if(isNum(displayNum[i]) === true){
+    // keep looping until op
+    typeArr.push("n");
+  }
+  if(isOp(displayNum[i]) === true){
+    if(displayNum[i] === '-' && typeArr[typeArr.length-1] === 'o'){
+      typeArr.push("n");
+    } else{
+        typeArr.push("o");
+    }
+  }
+}
+console.log(typeArr);
+newNum = '';
+for(let i = 0; i < typeArr.length; i++){
+  // find n, add to num arr, if o add to opArray
+  if(typeArr[i] === 'n'){
+    newNum += displayNum[i];
+  }
+  if(typeArr[i] === 'o'){
+    pushToNumArray(newNum);
+    opArray.push(displayNum[i]);
+    newNum = '';
+  }
+  if(i === typeArr.length - 1){
+    pushToNumArray(newNum);
+    newNum = '';
+  }
+}
+console.log(numArray);
+console.log(opArray);
+
 
   if (mode === "immediate") {
     calculateImmediate();
