@@ -1,4 +1,3 @@
-// have one subtract button and one minus button, change int to float for dec
 
 // add event listeners
 let displayNum = "";
@@ -20,6 +19,7 @@ document.getElementById("formula").addEventListener("click", function() {
 });
 
 let display = document.getElementById("display");
+let display2 = document.getElementById("display2");
 
 let nums = document.getElementsByClassName("num");
 
@@ -32,8 +32,29 @@ for (let i = 0; i < ops.length; i++) {
   ops[i].addEventListener("click", putOp);
 }
 
+function hasDecimal(display){
+  let nextNum = "";
+  let hasOp = false;
+  for(let i = 0; i < display.length; i++){
+    if(isOp(display[i]) === true){
+      nextNum = display.slice(i+1);
+      hasOp = true;
+  }
+    if(hasOp === false && i === display.length - 1){
+    nextNum = display.slice(0);
+    }
+  }
+  if(nextNum.includes('.')){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
 document.getElementById("decimal").addEventListener("click", function() {
-  if (!newNum.includes('.')) {
+//  if (hasDecimal(displayNum) === false){
+if(hasDecimal(displayNum) === false){
     newNum += this.textContent;
     displayNum += this.textContent;
     display.textContent = displayNum;
@@ -53,7 +74,18 @@ document.getElementById("minus").addEventListener("click", function() {
 });
 
 
-
+// make separate percent calculator
+/*
+document.getElementById("percent").addEventListener("click", function(){
+  let prev = displayNum[displayNum.length-1];
+  if(isOp(prev) === true || prev === '%' || displayNum.length === 0){ // don't add
+  } else {
+    newNum += '%';
+  displayNum += '%';
+  display.textContent = displayNum;
+}
+});
+*/
 
 function putOp() {
 //  if (newNum.length > 0) {
@@ -62,7 +94,6 @@ function putOp() {
       displayNum[displayNum.length - 1] === '*' ||
     displayNum[displayNum.length - 1] === '-') {
 
-    //  opArray.pop();
     if(displayNum[displayNum.length-1] === '-' && minusFlag === true){
       displayNum = displayNum.slice(0, -2);
       console.log(displayNum);
@@ -72,21 +103,7 @@ function putOp() {
       console.log(displayNum);
       display.textContent = displayNum;
 }
-
-  //  } else {
-      // newNum = newNum.toPrecision(2);
-      if (!newNum.includes('.')) {
-      //  numArray.push(parseInt(newNum));
-      } else {
-        // newNum = newNum.toFixed(4);
-      //  newNum = parseFloat(newNum);
-      //  newNum = Math.round(newNum * 1e4) / 1e4;
-      //  numArray.push(newNum);
-      }
       newNum = "";
-  //  }
-    //opArray.push(this.textContent);
-
   }
 
   displayNum += this.textContent;
@@ -107,8 +124,12 @@ function putNum() {
     newNum += this.textContent;
     displayNum += this.textContent;
   }*/
-  //if 0 and at beg of display or num, dont add. nvm could just be 0,check other nums
-if(/*this.textContent === '0' && isOp(displayNum[displayNum.length-1]) === true*/displayNum[displayNum.length-1] === '0' && isOp(displayNum[displayNum.length-2]) === true){
+  let prev = displayNum[displayNum.length - 1];
+// if prev is %
+  if(prev === '%'){ // dont add
+  } else{
+      //if 0 and at beg of display or num, dont add. nvm could just be 0,check other nums
+if(/*this.textContent === '0' && isOp(prev) === true*/prev === '0' && isOp(displayNum[displayNum.length-2]) === true){
   displayNum = displayNum.slice(0,-1);
   displayNum += this.textContent;
 }
@@ -120,6 +141,7 @@ if(/*this.textContent === '0' && isOp(displayNum[displayNum.length-1]) === true*
   display.textContent = displayNum;
   deleteNext = "num";
   minusFlag = false;
+}
 }
 
 document.getElementById("clear").addEventListener("click", function() {
@@ -207,15 +229,8 @@ function pushToNumArray(num){
 }
 
 document.getElementById("equals").addEventListener("click", function() {
-  /*if (!newNum.includes('.')) {
-    numArray.push(parseInt(newNum));
-  } else {
-    newNum = parseFloat(newNum);
-    newNum = Math.round(newNum * 1e4) / 1e4;
-    numArray.push(newNum);
-  }
-  newNum = "";
-*/
+
+display2.textContent = displayNum;
 // use displayNum to add num and op to correct opArray
 // if num, convert from string to nums
 let typeArr = [];
@@ -259,44 +274,15 @@ console.log(opArray);
     calculateFormula();
   }
 
+
   /*
     for(let i = 0; i < displayNum.length; i++){
-     // console.log(displayNum);
+
       let regNum = /[0-9]/;
       let result = regNum.test(displayNum[i]);
 
-      //console.log(result)
-      if(result){
-        //console.log("num" + displayNum[i]);
-        //let createNum = parseInt(displayNum[i]);
-        tempNum += displayNum[i];
-        if(i === displayNum.length-1){
-          tempNum = parseInt(tempNum);
-        }
-      }
-      else{
-       // console.log("op" + displayNum[i]);
-        if(tempNum2.length === 0){
-          tempNum2 = tempNum;
-         // tempNum2 = tempNum2.join();
-         // console.log(tempNum2)
-          tempNum2 = parseInt(tempNum2);
-          tempNum = "";
-        }
-        else{
-          // tempNum2 op tempNum
-         // let final = tempNum2 displayNum[i] tempNum;
-          //tempNum2 = tempNum;
-          //tempNum = "";
-          tempNum = parseInt(tempNum);
-        }
-
-      }
-
     }
-
-    tempNum = "";
-    tempNum2 = "";*/
+;*/
 });
 
 function calculateFormula() {
@@ -422,9 +408,6 @@ function calculateImmediate() {
       addResult *= numArray[i + 1];
     }
   }
-  //console.log(tempNum);
-  // console.log(tempNum2);
-
 
   addResult = Number(addResult);
   if (!Number.isInteger(addResult)) {
