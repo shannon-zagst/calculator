@@ -3,6 +3,7 @@
 let displayNum = "";
 let numArray = [];
 let opArray = [];
+let typeArr = [];
 let newNum = "";
 let mode = "immediate";
 let deleteNext = "";
@@ -64,7 +65,7 @@ if(hasDecimal(displayNum) === false){
 
 document.getElementById("minus").addEventListener("click", function() {
   let prevC = displayNum[displayNum.length-1];
-  if (/*newNum === ""*/isOp(prevC)) {
+  if (/*newNum === ""*/isOp(prevC) || prevC === '(' || displayNum.length === 0) {
     newNum += '-';
     displayNum += '-';
     display.textContent = displayNum;
@@ -72,7 +73,6 @@ document.getElementById("minus").addEventListener("click", function() {
     minusFlag = true;
   }
 });
-
 
 // make separate percent calculator
 /*
@@ -89,12 +89,13 @@ document.getElementById("percent").addEventListener("click", function(){
 
 function putOp() {
 //  if (newNum.length > 0) {
-    if (displayNum[displayNum.length - 1] === '+' ||
-        displayNum[displayNum.length - 1] === '/' ||
-      displayNum[displayNum.length - 1] === '*' ||
-    displayNum[displayNum.length - 1] === '-') {
+let prev = displayNum[displayNum.length-1];
+    if (prev === '+' ||
+        prev === '/' ||
+      prev === '*' ||
+    prev === '-') {
 
-    if(displayNum[displayNum.length-1] === '-' && minusFlag === true){
+    if(prev === '-' && minusFlag === true){
       displayNum = displayNum.slice(0, -2);
       console.log(displayNum);
       display.textContent = displayNum;
@@ -105,11 +106,13 @@ function putOp() {
 }
       newNum = "";
   }
-
+if(prev === '('){ // dont add
+}else{
   displayNum += this.textContent;
   display.textContent = displayNum;
   deleteNext = "op";
   minusFlag = false;
+}
 }
 
 function putNum() {
@@ -126,7 +129,7 @@ function putNum() {
   }*/
   let prev = displayNum[displayNum.length - 1];
 // if prev is %
-  if(prev === '%'){ // dont add
+  if(prev === '%' || prev === ')'){ // dont add
   } else{
       //if 0 and at beg of display or num, dont add. nvm could just be 0,check other nums
 if(/*this.textContent === '0' && isOp(prev) === true*/prev === '0' && isOp(displayNum[displayNum.length-2]) === true){
@@ -181,17 +184,43 @@ let tempNum2 = "";
 document.getElementById("paranthesesOne").addEventListener("click", function() {
   if (mode === "immediate") {
     /* don't add */ } else if (mode === "formula") {
+    if(isNum(displayNum[displayNum.length-1]) === false){
     newNum += '(';
     displayNum += '(';
     display.textContent = displayNum;
   }
+  }
 });
+
+function needRightParan(display){
+  let leftP = 0;
+  let rightP = 0;
+  for(let i = 0; i < display.length; i++){
+    if(display[i] === '('){
+      leftP++;
+    }
+    else if(display[i] === ')'){
+      rightP++;
+    }
+  }
+  console.log(leftP);
+  console.log(rightP);
+  if(leftP > rightP){
+    return true;
+  }
+  else if(leftP <= rightP){
+    return false;
+  }
+
+}
 
 document.getElementById("paranthesesTwo").addEventListener("click", function() {
   if (mode === "immediate") {} else if (mode === "formula") {
+    if(needRightParan(displayNum) === true && isOp(displayNum[displayNum.length-1]) === false){
     newNum += ')';
     displayNum += ')';
     display.textContent = displayNum;
+  }
   }
 });
 
@@ -218,6 +247,231 @@ function isOp(prevC){
   }
 }
 
+//////////////////
+// make sure two paran not next to each other - user error - (())
+document.getElementById("equals").addEventListener("click", function() {
+
+while(needRightParan(displayNum)){
+  displayNum += ')';
+}
+
+display2.textContent = displayNum;
+
+// use displayNum to add num and op to correct opArray
+// if num, convert from string to nums
+
+
+// finds first or last index of ps
+// find innermost set of paran??
+
+/*
+//let pp = typeArr.findIndex(type => type === 'p1');
+let ppp = typeArr.lastIndexOf('p1');
+console.log(ppp);
+let pp2 = typeArr.findIndex(type => type === 'p2');
+//let ppp2 = typeArr.lastIndexOf('p2');
+console.log(pp2);
+*/
+let paranCount = findNumP(displayNum);
+for(let i = 0; i < paranCount; i++){
+calculateParan();
+}
+
+console.log(displayNum);
+console.log(numArray);
+console.log(opArray);
+
+console.log(typeArr);
+//console.log(newNumExp);
+console.log(numArray);
+console.log(opArray);
+//newNumExp = '';
+
+let res = 0;
+findTypeArray(displayNum);
+let opLeft = typeArr.includes('o');
+if(opLeft === false){
+  res = Number(displayNum);
+}
+else{
+  pushNumOpArraysFinal();
+   res = returnNum();
+}
+
+  postNum(res);
+
+  /*  for(let i = 0; i < displayNum.length; i++){
+
+      let regNum = /[0-9]/;
+      let result = regNum.test(displayNum[i]);
+    }
+;*/
+});
+
+
+// find number of paran expressions
+function findNumP(display){
+  let count = 0;
+  for(let i = 0; i < display.length; i++){
+    if(display[i] === '('){
+      count++;
+    }
+  }
+  return count;
+}
+
+// finds type array, then finds index of p, then calculates that expression
+function calculateParan(){
+    findTypeArray(displayNum);
+  let pIndex = findPIndex(displayNum);
+  console.log(pIndex);
+  findPExpression(pIndex);
+}
+
+// uses type array and display to find p index of expression
+function findPIndex(display){
+
+  // give +1 to each left p and -1 to each right p, LEFT of (
+  let pArray = [];
+  for(let i = 0; i < display.length; i++){
+    if(typeArr[i] === 'p1' || typeArr[i] === 'p2'){
+      pArray.push(typeArr[i]);
+    }
+  }
+  console.log(pArray);
+  let countP = 0;
+  let pCount = [];
+  for(let i = 0; i < pArray.length; i++){
+    if(pArray[i] === 'p1'){
+      //calculate
+      countP = 0;
+      for(let j = 0; j < i; j++){
+        if(pArray[j] === 'p1'){    countP++;    }
+        else if(pArray[j] === 'p2'){     countP--;   }
+      }
+      pCount.push(countP);
+    }
+  }
+  console.log(pCount);
+  let maxP = 0;
+  for(let i = 0; i < pCount.length; i++){
+    if(pCount[i] > maxP){
+      maxP = pCount[i];
+    }
+  }
+  console.log(maxP);
+  let pIndex = 0;
+
+for(let i = 0; i < pCount.length; i++){
+  if(pCount[i] === maxP){
+    pIndex = i;
+    break;
+  }
+}
+
+  //let pIndex = pCount.findIndex(count => count === maxP);
+  console.log(pIndex);
+  let pNum = 0;
+  let getPIndex = 0;
+  console.log(pIndex);
+  for(let i = 0; i < display.length; i++){
+    console.log("getPIndex: ", getPIndex, "pNum: ", pNum);
+    if(display[i] === '('){
+      if(pIndex === pNum){
+        getPIndex = i;
+        console.log(getPIndex);
+        pNum++;
+      }
+      else if(pNum < pIndex){
+        pNum++;
+      }
+      else{     }
+    }
+  }
+  console.log(getPIndex);
+  return getPIndex;
+}
+
+// using index of p1, find expression in paran, push to num and op arrays, calc answer, refine displayNum
+function findPExpression(indexP){
+  let newNum = '';
+  let newNumExp = '';
+  opArray = [];
+  numArray = [];
+
+        let  j = indexP + 1;
+          while(typeArr[j] !== 'p2'){
+            newNumExp += displayNum[j];
+            j++;
+          }
+          let newTypeArr = typeArr.splice(indexP, newNumExp.length + 2);
+          newTypeArr = newTypeArr.splice(1, newNumExp.length);
+          console.log(newTypeArr);
+
+          for(let k = 0; k < newTypeArr.length; k++){
+            if(newTypeArr[k] === 'n'){
+              newNum += displayNum[k + indexP + 1];
+            }
+            if(newTypeArr[k] === 'o'){
+              pushToNumArray(newNum);
+              opArray.push(displayNum[k + indexP + 1]);
+              newNum = '';
+            }
+            if(k === newTypeArr.length - 1){
+              pushToNumArray(newNum);
+              newNum = '';
+            }
+          }
+         let r = returnNum();
+          r = r.toString();
+          let dd = displayNum.split('');
+          dd.splice(indexP,newNumExp.length+2);
+          displayNum = dd.join('');
+        displayNum = displayNum.slice(0,indexP) + r + displayNum.slice(indexP);
+    console.log(displayNum);
+
+
+
+
+/*  for(let i = indexP; i < displayNum.length; i++){
+    if(typeArr[i] === 'p1'){
+      let  j = i + 1;
+        while(typeArr[j] !== 'p2'){
+          newNumExp += displayNum[j];
+          j++;
+        }
+        let newTypeArr = typeArr.splice(i, newNumExp.length + 2);
+        newTypeArr = newTypeArr.splice(1, newNumExp.length);
+        console.log(newTypeArr);
+
+        for(let k = 0; k < newTypeArr.length; k++){
+          if(newTypeArr[k] === 'n'){
+            newNum += displayNum[k + i + 1];
+          }
+          if(newTypeArr[k] === 'o'){
+            pushToNumArray(newNum);
+            opArray.push(displayNum[k + i + 1]);
+            newNum = '';
+          }
+          if(k === newTypeArr.length - 1){
+            pushToNumArray(newNum);
+            newNum = '';
+          }
+        }
+       let r = returnNum();
+        r = r.toString();
+        let dd = displayNum.split('');
+        dd.splice(i,newNumExp.length+2);
+        displayNum = dd.join('');
+      displayNum = displayNum.slice(0,i) + r + displayNum.slice(i);
+  console.log(displayNum);
+
+    }
+  }*/
+
+}
+
+// push string num into numArray as number
 function pushToNumArray(num){
   if (!num.includes('.')) {
     numArray.push(parseInt(num));
@@ -227,64 +481,43 @@ function pushToNumArray(num){
     numArray.push(num);
   }
 }
-
-document.getElementById("equals").addEventListener("click", function() {
-
-display2.textContent = displayNum;
-// use displayNum to add num and op to correct opArray
-// if num, convert from string to nums
-let typeArr = [];
-for(let i = 0; i < displayNum.length; i++){
-  if(isNum(displayNum[i]) === true){
-    // keep looping until op
-    typeArr.push("n");
-  }
-  if(isOp(displayNum[i]) === true){
-    if(displayNum[i] === '-' && typeArr[typeArr.length-1] === 'o'){
+// find if num, op, or paran for expression, push to typeArr
+function findTypeArray(display){
+typeArr = [];
+  for(let i = 0; i < display.length; i++){
+    if(isNum(display[i]) === true){
+      // keep looping until op
       typeArr.push("n");
-    } else{
-        typeArr.push("o");
+    }
+    else if(isOp(display[i]) === true){
+      if((display[i] === '-' && typeArr[typeArr.length-1] === 'o') || (display[i] === '-' && i === 0)){
+        typeArr.push("n");
+      } else{
+          typeArr.push("o");
+      }
+    }
+    else if(display[i] === '(')
+    {
+      typeArr.push("p1");
+    }
+    else if(display[i] === ')'){
+      typeArr.push("p2");
     }
   }
+
+  console.log(typeArr);
 }
-console.log(typeArr);
-newNum = '';
-for(let i = 0; i < typeArr.length; i++){
-  // find n, add to num arr, if o add to opArray
-  if(typeArr[i] === 'n'){
-    newNum += displayNum[i];
-  }
-  if(typeArr[i] === 'o'){
-    pushToNumArray(newNum);
-    opArray.push(displayNum[i]);
-    newNum = '';
-  }
-  if(i === typeArr.length - 1){
-    pushToNumArray(newNum);
-    newNum = '';
-  }
-}
-console.log(numArray);
-console.log(opArray);
-
-
-  if (mode === "immediate") {
-    calculateImmediate();
-  } else if (mode === "formula") {
-    calculateFormula();
-  }
-
-
-  /*
-    for(let i = 0; i < displayNum.length; i++){
-
-      let regNum = /[0-9]/;
-      let result = regNum.test(displayNum[i]);
-
+// finds mode and return answer to expression
+function returnNum(){
+  let res;
+    if (mode === "immediate") {
+      res = calculateImmediate();
+    } else if (mode === "formula") {
+       res = calculateFormula();
     }
-;*/
-});
-
+    return res;
+}
+// calculates answer using (MD)(AS), needs numArray and opArray, doesn't use displayNum
 function calculateFormula() {
   let newOpArr = [];
   let newNumArr = [];
@@ -353,6 +586,8 @@ function calculateFormula() {
     result = 0;
   } else if (newOpArr.length === 0) {
     result = newNumArr[0];
+  } else if(numArray.length === 1){
+    result = numArray[0];
   }
 
   for (let i = 0; i < newOpArr.length; i++) {
@@ -370,19 +605,17 @@ function calculateFormula() {
   }
 
   result = Number(result);
-  console.log(result);
   if (!Number.isInteger(result)) {
     result = Math.round(result * 1e4) / 1e4;
   }
-  newNum = result.toString();
-  displayNum = result.toString();
   numArray = [];
   opArray = [];
   newNumArr = [];
   newOpArr = [];
-  display.textContent = displayNum;
-}
+return result;
 
+}
+// calculates answer using (MDAS), needs numArray and opArray, doesn't use displayNum
 function calculateImmediate() {
 
   // left to right (immediate execution logic)
@@ -413,6 +646,12 @@ function calculateImmediate() {
   if (!Number.isInteger(addResult)) {
     addResult = Math.round(addResult * 1e4) / 1e4;
   }
+  numArray = [];
+  opArray = [];
+  return addResult;
+/*  if (!Number.isInteger(addResult)) {
+    addResult = Math.round(addResult * 1e4) / 1e4;
+  }
   console.log(numArray);
   console.log(opArray);
   console.log(addResult);
@@ -427,5 +666,42 @@ function calculateImmediate() {
   console.log(numArray);
   console.log(opArray);
   console.log(addResult);
-  console.log(displayNum);
+  console.log(displayNum);*/
+}
+// first, find types for final displayNum, then push to num or op arrays
+function pushNumOpArraysFinal(){
+  numArray = [];
+  opArray = [];
+  //findTypeArray(displayNum);
+  // calculate
+newNum = '';
+  for(let i = 0; i < typeArr.length; i++){
+    // find n, add to num arr, if o add to opArray
+    if(typeArr[i] === 'n'){
+      newNum += displayNum[i];
+      if(i === typeArr.length - 1){
+        pushToNumArray(newNum);
+        newNum = '';
+      }
+    }
+    if(typeArr[i] === 'o'){
+      pushToNumArray(newNum);
+      opArray.push(displayNum[i]);
+      newNum = '';
+    }
+    if(i === typeArr.length - 1){
+      pushToNumArray(newNum);
+      newNum = '';
+    }
+  }
+
+}
+// post final answer to display
+function postNum(num){
+  if (!Number.isInteger(num)) {
+    num = Math.round(num * 1e4) / 1e4;
+  }
+  newNum = num.toString();
+  displayNum = num.toString();
+  display.textContent = displayNum;
 }
