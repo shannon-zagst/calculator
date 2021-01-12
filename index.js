@@ -181,18 +181,15 @@ let tempNum2 = "";
   tempNum = parseInt(displayNum);
 });*/
 
-document.getElementById("paranthesesOne").addEventListener("click", function() {
-  if (mode === "immediate") {
-    /* don't add */ } else if (mode === "formula") {
-    if(isNum(displayNum[displayNum.length-1]) === false){
+document.getElementById("parenthesesOne").addEventListener("click", function() {
+    if(isNum(displayNum[displayNum.length-1]) === false && displayNum[displayNum.length-1] !== ')'){
     newNum += '(';
     displayNum += '(';
     display.textContent = displayNum;
   }
-  }
 });
 
-function needRightParan(display){
+function needRightParen(display){
   let leftP = 0;
   let rightP = 0;
   for(let i = 0; i < display.length; i++){
@@ -214,16 +211,13 @@ function needRightParan(display){
 
 }
 
-document.getElementById("paranthesesTwo").addEventListener("click", function() {
-  if (mode === "immediate") {} else if (mode === "formula") {
-    if(needRightParan(displayNum) === true && isOp(displayNum[displayNum.length-1]) === false){
+document.getElementById("parenthesesTwo").addEventListener("click", function() {
+    if(needRightParen(displayNum) === true && isOp(displayNum[displayNum.length-1]) === false && displayNum[displayNum.length-1] !== '('){
     newNum += ')';
     displayNum += ')';
     display.textContent = displayNum;
   }
-  }
 });
-
 
 let digits = ['0','1','2','3','4','5','6','7','8','9','.'];
 function isNum(n){
@@ -247,11 +241,9 @@ function isOp(prevC){
   }
 }
 
-//////////////////
-// make sure two paran not next to each other - user error - (())
 document.getElementById("equals").addEventListener("click", function() {
 
-while(needRightParan(displayNum)){
+while(needRightParen(displayNum)){
   displayNum += ')';
 }
 
@@ -259,7 +251,6 @@ display2.textContent = displayNum;
 
 // use displayNum to add num and op to correct opArray
 // if num, convert from string to nums
-
 
 // finds first or last index of ps
 // find innermost set of paran??
@@ -272,9 +263,9 @@ let pp2 = typeArr.findIndex(type => type === 'p2');
 //let ppp2 = typeArr.lastIndexOf('p2');
 console.log(pp2);
 */
-let paranCount = findNumP(displayNum);
-for(let i = 0; i < paranCount; i++){
-calculateParan();
+let parenCount = findNumP(displayNum);
+for(let i = 0; i < parenCount; i++){
+calculateParen();
 }
 
 console.log(displayNum);
@@ -301,15 +292,13 @@ else{
   postNum(res);
 
   /*  for(let i = 0; i < displayNum.length; i++){
-
       let regNum = /[0-9]/;
       let result = regNum.test(displayNum[i]);
     }
 ;*/
 });
 
-
-// find number of paran expressions
+// find number of paren expressions
 function findNumP(display){
   let count = 0;
   for(let i = 0; i < display.length; i++){
@@ -321,7 +310,7 @@ function findNumP(display){
 }
 
 // finds type array, then finds index of p, then calculates that expression
-function calculateParan(){
+function calculateParen(){
     findTypeArray(displayNum);
   let pIndex = findPIndex(displayNum);
   console.log(pIndex);
@@ -392,7 +381,7 @@ for(let i = 0; i < pCount.length; i++){
   return getPIndex;
 }
 
-// using index of p1, find expression in paran, push to num and op arrays, calc answer, refine displayNum
+// using index of p1, find expression in paren, push to num and op arrays, calc answer, refine displayNum
 function findPExpression(indexP){
   let newNum = '';
   let newNumExp = '';
@@ -490,7 +479,9 @@ typeArr = [];
       typeArr.push("n");
     }
     else if(isOp(display[i]) === true){
-      if((display[i] === '-' && typeArr[typeArr.length-1] === 'o') || (display[i] === '-' && i === 0)){
+      if((display[i] === '-' && typeArr[typeArr.length-1] === 'o') ||
+      (display[i] === '-' && i === 0) ||
+    (display[i] === '-' && typeArr[typeArr.length-1] === 'p1')){
         typeArr.push("n");
       } else{
           typeArr.push("o");
@@ -584,9 +575,10 @@ function calculateFormula() {
   let result;
   if (newOpArr.length > 0) {
     result = 0;
-  } else if (newOpArr.length === 0) {
+  } else if (newOpArr.length === 0 && newNumArr.length > 0) {
     result = newNumArr[0];
   } else if(numArray.length === 1){
+    console.log("numarray", numArray[0])
     result = numArray[0];
   }
 
@@ -641,6 +633,10 @@ function calculateImmediate() {
       addResult *= numArray[i + 1];
     }
   }
+
+if(opArray.length === 0){
+  addResult = numArray[0];
+}
 
   addResult = Number(addResult);
   if (!Number.isInteger(addResult)) {

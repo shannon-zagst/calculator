@@ -1,6 +1,6 @@
 body{ text-align: center; }
 .calc{  width: 300px; margin: 0 auto;}
-.num, .op, #equals, #decimal, #clear, #minus, #paranthesesOne, #paranthesesTwo, #erase, #percent{
+.num, .op, #equals, #decimal, #clear, #minus, #parenthesesOne, #parenthesesTwo, #erase, #percent{
 border: 1px solid black;
 width: 50px; height: 50px;
 display: inline-block;
@@ -8,7 +8,7 @@ margin-top: 2px;}
 .num, #decimal {
   background-color: rgba(20,100,200,.7);
 }
-.op, #equals, #paranthesesOne, #paranthesesTwo, #percent{
+.op, #equals, #parenthesesOne, #parenthesesTwo, #percent{
     background-color: rgba(80,100,230,.8);
 }
 #minus{
