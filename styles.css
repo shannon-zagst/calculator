@@ -1,10 +1,23 @@
 body{ text-align: center; }
-.calc{  width: 300px; margin: 0 auto;}
-.num, .op, #equals, #decimal, #clear, #minus, #parenthesesOne, #parenthesesTwo, #erase, #percent{
+.calc{  width: 350px;
+  height: 610px;
+  margin: 0 auto;
+  display: grid | inline-grid;
+
+border: 2px solid red;
+}
+/*.num, .op, #equals, #decimal, #clear, #minus, #parenthesesOne, #parenthesesTwo, #erase, #percent*/
+.btn{
 border: 1px solid black;
-width: 50px; height: 50px;
+width: 65px; height: 65px;
 display: inline-block;
-margin-top: 2px;}
+margin-top: 4px;
+font-size: 1.5em;
+padding-top: 10px;
+}
+.btn:hover{
+  opacity: .7;
+}
 .num, #decimal {
   background-color: rgba(20,100,200,.7);
 }
@@ -21,7 +34,9 @@ margin-top: 2px;}
 
 
 #display, #display2{
-width: 200px;
-  height: 30px;
+width: 250px;
+  height: 50px;
 background-color: gray;
-border: 2px solid black;}
+font-size: 1.3em;
+border: 2px solid black;
+display: inline-block;}
