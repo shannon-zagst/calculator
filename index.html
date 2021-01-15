@@ -2,6 +2,8 @@
 
 <head>
   <title>Calculator</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <link rel="stylesheet" href="styles.css" type="text/css" />
 </head>
 
@@ -11,44 +13,55 @@
   <div id="notes">
     <p>
       Immediate Execution Logic (left to right) OR Formula/Expression Logic (order of operations)
-      </p>
-      <p id="mode">
-        Current Mode: Immediate
-        </p>
-        <button id="immediate">Immediate</button><button id="formula">Formula</button>
-    </div>
+    </p>
+    <p id="mode">
+      Current Mode: Immediate
+    </p>
+    <button id="immediate">Immediate</button><button id="formula">Formula</button>
+  </div>
   <div class="calc">
     <div id="display2"> </div>
+    <div class="display-top">
 
-    <div id="display">0</div>
-      <div id="erase" class="btn">delete</div>
+
+      <div id="display">0</div>
+      <div id="erase" class="btn">
+        <i class="fas fa-backspace"></i>
+      </div>
+    </div>
+
+    <div class="keys">
+
 
       <div id="parenthesesOne" class="btn">(</div>
       <div id="parenthesesTwo" class="btn">)</div>
-          <div id="clear" class="btn">clear</div>
-        <div id="divide" class="op btn">/</div>
+      <div id="clear" class="btn">C</div>
+      <div id="divide" class="op btn">/</div>
 
-        <div id="nine" class="num btn">9</div>
-        <div id="eight" class="num btn">8</div>
-          <div id="seven" class="num btn">7</div>
-          <div id="multiply" class="op btn">*</div>
+      <div id="nine" class="num btn">9</div>
+      <div id="eight" class="num btn">8</div>
+      <div id="seven" class="num btn">7</div>
+      <div id="multiply" class="op btn">*</div>
 
-            <div id="six" class="num btn">6</div>
-                <div id="five" class="num btn">5</div>
-                  <div id="four" class="num btn">4</div>
-                    <div id="subtract" class="op btn">-</div>
+      <div id="six" class="num btn">6</div>
+      <div id="five" class="num btn">5</div>
+      <div id="four" class="num btn">4</div>
+      <div id="subtract" class="op btn">-</div>
 
-                        <div id="three" class="num btn">3</div>
-            <div id="two" class="num btn">2</div>
-              <div id="one" class="num btn">1</div>
-                <div id="add" class="op btn">+</div>
+      <div id="three" class="num btn">3</div>
+      <div id="two" class="num btn">2</div>
+      <div id="one" class="num btn">1</div>
+      <div id="add" class="op btn">+</div>
 
-    <div id="zero" class="num btn">0</div>
+      <div id="zero" class="num btn">0</div>
       <div id="decimal" class="btn">.</div>
-    <div id ="minus" class="btn">-</div>
-    <div id="equals" class="btn">=</div>
+      <div id="minus" class="btn">-</div>
+      <div id="equals" class="btn">=</div>
+
 
     </div>
+
+  </div>
   <!--<div id="percent">%</div>-->
   <script src="index.js"></script>
 </body>

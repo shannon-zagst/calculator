@@ -106,7 +106,7 @@ let prev = displayNum[displayNum.length-1];
 }
       newNum = "";
   }
-if(prev === '('){ // dont add
+if(prev === '(' || displayNum.length === 0){ // dont add
 }else{
   displayNum += this.textContent;
   display.textContent = displayNum;
@@ -247,7 +247,7 @@ while(needRightParen(displayNum)){
   displayNum += ')';
 }
 
-display2.textContent = displayNum;
+
 
 // use displayNum to add num and op to correct opArray
 // if num, convert from string to nums
@@ -698,6 +698,8 @@ function postNum(num){
     num = Math.round(num * 1e4) / 1e4;
   }
   newNum = num.toString();
-  displayNum = num.toString();
+  display2.textContent = displayNum + "=" + newNum;
+  displayNum = newNum;
   display.textContent = displayNum;
+
 }
