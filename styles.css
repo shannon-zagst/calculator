@@ -1,82 +1,93 @@
-body{ text-align: center;
-background-image: linear-gradient(to top right, blue, green);
-font-family: arial;
- }
-.calc{  width: 360px;
+body {
+  text-align: center;
+  background-image: linear-gradient(to top right, blue, green);
+  font-family: arial;
+}
+
+.calc {
+  width: 350px;
   height: 570px;
   margin: 0 auto;
   margin-top: 20px;
   display: grid | inline-grid;
-background-color: white;
-
-
+  background-color: white;
+  font-weight: bold;
+  border-radius: 10px;
 }
-.keys{
+
+.keys {
   width: 325px;
   height: 450px;
-
   margin: 0 auto;
   margin-top: 30px;
 }
-/*.num, .op, #equals, #decimal, #clear, #minus, #parenthesesOne, #parenthesesTwo, #erase, #percent*/
-.btn{
 
-width: 65px; height: 55px;
-display: inline-block;
-margin-top: 2px;
-font-size: 1.5em;
-padding-top: 15px;
+/*.num, .op, #equals, #decimal, #clear, #minus, #parenthesesOne, #parenthesesTwo, #erase, #percent*/
+.btn {
+  width: 65px;
+  height: 55px;
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 1.5em;
+  padding-top: 15px;
+  border-radius: 5px;
 }
-.btn:hover{
+
+.btn:hover, .btn:active {
   opacity: .7;
 }
+
 .num, #decimal {
-  background-color: rgba(20,100,200,.7);
+  background-color: rgba(20, 100, 200, .7);
 }
-.op, #equals, #parenthesesOne, #parenthesesTwo, #percent{
-    background-color: rgba(80,100,230,.8);
+
+.op, #equals, #parenthesesOne, #parenthesesTwo, #percent {
+  background-color: rgba(80, 100, 230, .8);
 }
-#minus{
-    background-color: rgba(200, 10, 30,.9);
+
+#minus {
+  background-color: rgba(200, 10, 30, .9);
 }
-#clear, #erase{
-    background-color: rgba(20, 170, 240, .7);
+
+#clear, #erase {
+  background-color: rgba(20, 170, 240, .7);
 }
-#equals{
+
+#equals {
   background-color: orange;
 }
-#erase{
+
+#erase {
   border-radius: 20%;
   height: 40px;
   width: 45px;
 }
 
-.display-top{
-
-
+.display-top {
   height: 65px;
-
 }
-#display, #erase{
+
+#display, #erase {
   vertical-align: top;
 }
 
-#display, #display2{
-
+#display, #display2 {
   height: 70px;
-background-color: black;
-color: white;
-font-size: 1.3em;
-border: 2px solid black;
-display: inline-block;
-word-wrap: break-word;
-word-break: break-all;
+  background-color: black;
+  color: white;
+  font-size: 1.3em;
+  border: 2px solid black;
+  display: inline-block;
+  word-wrap: break-word;
+  word-break: break-all;
 }
-#display{
+
+#display {
   width: 250px;
   height: 60px;
 }
-#display2{
+
+#display2 {
   width: 300px;
   border: 1px solid gray;
   margin-top: 7px;
