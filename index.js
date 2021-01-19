@@ -5,7 +5,6 @@ let opArray = [];
 let typeArr = [];
 let newNum = "";
 let mode = "immediate";
-let deleteNext = "";
 let minusFlag = false;
 
 let putMode = document.getElementById("mode");
@@ -32,6 +31,7 @@ for (let i = 0; i < ops.length; i++) {
   ops[i].addEventListener("click", putOp);
 }
 
+// find current num and return true if there is a decimal
 function hasDecimal(display) {
   let nextNum = "";
   let hasOp = false;
@@ -57,8 +57,7 @@ document.getElementById("decimal").addEventListener("click", function() {
     newNum += this.textContent;
     displayNum += this.textContent;
     display.textContent = displayNum;
-    deleteNext = "num";
-  }
+    }
 });
 
 document.getElementById("minus").addEventListener("click", function() {
@@ -67,7 +66,6 @@ document.getElementById("minus").addEventListener("click", function() {
     newNum += '-';
     displayNum += '-';
     display.textContent = displayNum;
-    deleteNext = "num";
     minusFlag = true;
   }
 });
@@ -106,7 +104,6 @@ function putOp() {
   } else {
     displayNum += this.textContent;
     display.textContent = displayNum;
-    deleteNext = "op";
     minusFlag = false;
   }
 }
@@ -127,7 +124,6 @@ function putNum() {
     }
 
     display.textContent = displayNum;
-    deleteNext = "num";
     minusFlag = false;
   }
 }
@@ -208,11 +204,21 @@ function isOp(prevC) {
   }
 }
 
+let finalDisplay = '';
+// DISPLAY GETS RID OF PAREN
 document.getElementById("equals").addEventListener("click", function() {
 
+let prev = displayNum[displayNum.length - 1];
+// if display ends in operator
+if(isOp(prev) === true){
+  console.log("op dont compute")
+}
+else{
   while (needRightParen(displayNum)) {
     displayNum += ')';
   }
+ finalDisplay = displayNum;
+
 
   // use displayNum to add num and op to correct opArray
   // if num, convert from string to nums
@@ -233,7 +239,7 @@ document.getElementById("equals").addEventListener("click", function() {
   }
 
   postNum(res);
-
+}
   /*  for(let i = 0; i < displayNum.length; i++){
       let regNum = /[0-9]/;
       let result = regNum.test(displayNum[i]);
@@ -575,7 +581,7 @@ function postNum(num) {
     num = Math.round(num * 1e4) / 1e4;
   }
   newNum = num.toString();
-  display2.textContent = displayNum + "=" + newNum;
+  display2.textContent = finalDisplay + "=" + newNum;
   displayNum = newNum;
   display.textContent = displayNum;
 
