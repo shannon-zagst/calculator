@@ -6,6 +6,11 @@ let typeArr = [];
 let newNum = "";
 let mode = "immediate";
 let minusFlag = false;
+let historyArr = [];
+let historyNum = "";
+let isNewNum = false;
+
+let history = document.querySelector('#history');
 
 let putMode = document.getElementById("mode");
 document.getElementById("immediate").addEventListener("click", function() {
@@ -53,7 +58,7 @@ function hasDecimal(display) {
 
 document.getElementById("decimal").addEventListener("click", function() {
   //  if (hasDecimal(displayNum) === false){
-  if (hasDecimal(displayNum) === false) {
+  if (hasDecimal(displayNum) === false && isNewNum === false) {
     newNum += this.textContent;
     displayNum += this.textContent;
     display.textContent = displayNum;
@@ -106,15 +111,23 @@ function putOp() {
     display.textContent = displayNum;
     minusFlag = false;
   }
+isNewNum = false;
 }
 
 function putNum() {
+
+  if(isNewNum){
+displayNum = this.textContent;
+display.textContent = displayNum;
+isNewNum = false;
+  }else{
   let prev = displayNum[displayNum.length - 1];
   // if prev is %
   if (prev === '%' || prev === ')') { // dont add
   } else {
     //if 0 and at beg of display or num, dont add. nvm could just be 0,check other nums
-    if ( /*this.textContent === '0' && isOp(prev) === true*/ prev === '0' && isOp(displayNum[displayNum.length - 2]) === true) {
+    if ( /*this.textContent === '0' && isOp(prev) === true*/ prev === '0' && isOp(displayNum[displayNum.length - 2]) === true
+  || prev === '0' && displayNum.length === 1) {
       displayNum = displayNum.slice(0, -1);
       displayNum += this.textContent;
     }
@@ -127,6 +140,7 @@ function putNum() {
     minusFlag = false;
   }
 }
+}
 
 document.getElementById("clear").addEventListener("click", function() {
   displayNum = "";
@@ -134,6 +148,7 @@ document.getElementById("clear").addEventListener("click", function() {
   numArray = [];
   opArray = [];
   display.textContent = displayNum;
+  isNewNum = false;
 });
 
 document.getElementById("erase").addEventListener("click", function() {
@@ -142,6 +157,7 @@ document.getElementById("erase").addEventListener("click", function() {
 
   displayNum = displayNum.slice(0, displayNum.length - 1);
   display.textContent = displayNum;
+  isNewNum = false;
 });
 
 let tempNum = "";
@@ -203,9 +219,9 @@ function isOp(prevC) {
     return false;
   }
 }
-
+// so display don't get rid of paren
 let finalDisplay = '';
-// DISPLAY GETS RID OF PAREN
+
 document.getElementById("equals").addEventListener("click", function() {
 
 let prev = displayNum[displayNum.length - 1];
@@ -581,8 +597,20 @@ function postNum(num) {
     num = Math.round(num * 1e4) / 1e4;
   }
   newNum = num.toString();
-  display2.textContent = finalDisplay + "=" + newNum;
+  historyNum = finalDisplay + " = " + newNum;
+  displayHistory();
+  display2.textContent = historyNum;
   displayNum = newNum;
   display.textContent = displayNum;
+  isNewNum = true;
 
+}
+
+function displayHistory(){
+  // array not being used?
+  historyArr.push(historyNum);
+  let p = document.createElement("p");
+  let t = document.createTextNode(historyNum);
+  p.appendChild(t);
+  history.appendChild(p);
 }

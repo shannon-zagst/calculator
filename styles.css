@@ -9,7 +9,8 @@ body {
   height: 570px;
   margin: 0 auto;
   margin-top: 20px;
-  display: grid | inline-grid;
+/*  display: grid | inline-grid; */
+display: inline-block;
   background-color: white;
   font-weight: bold;
   border-radius: 10px;
@@ -92,3 +93,15 @@ body {
   border: 1px solid gray;
   margin-top: 7px;
 }
+
+/* For history section */
+
+#history_cont{
+  border: 2px solid black;
+  width: 200px;
+  background-color: rgb(20, 200,200, .3);
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* Make calculator responsive for mobile */
