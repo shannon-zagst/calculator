@@ -95,13 +95,25 @@ display: inline-block;
 }
 
 /* For history section */
-
 #history_cont{
   border: 2px solid black;
-  width: 200px;
+  width: 250px;
+  height: 570px;
   background-color: rgb(20, 200,200, .3);
+  border-radius: 10px;
+  margin-top: 20px;
   display: inline-block;
   vertical-align: top;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow: auto;
+
+}
+#clear-history{
+
+}
+h2{
+  border-bottom: 1px solid black;
 }
 
 /* Make calculator responsive for mobile */

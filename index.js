@@ -4,13 +4,19 @@ let numArray = [];
 let opArray = [];
 let typeArr = [];
 let newNum = "";
-let mode = "immediate";
+let mode = "formula";
 let minusFlag = false;
 let historyArr = [];
 let historyNum = "";
 let isNewNum = false;
 
 let history = document.querySelector('#history');
+let clearHistory = document.querySelector("#clear-history");
+
+clearHistory.addEventListener("click", function(){
+    history.textContent = '';
+});
+
 
 let putMode = document.getElementById("mode");
 document.getElementById("immediate").addEventListener("click", function() {
@@ -608,6 +614,7 @@ function postNum(num) {
 
 function displayHistory(){
   // array not being used?
+  // history overflows - l to r, and t to b
   historyArr.push(historyNum);
   let p = document.createElement("p");
   let t = document.createTextNode(historyNum);
